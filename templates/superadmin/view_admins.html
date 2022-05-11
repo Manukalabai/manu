@@ -1,0 +1,161 @@
+<html>
+{% include 'partials/nav.html' %}
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title>welcome</title>
+</head>
+
+<body>
+
+
+    <form action="{{url_for('search_admin')}}" method="post">
+        <input type="text" placeholder="search by first_name,last_name,email,gender,role" id="search" name="search">
+        <input type="submit" value="submit">
+    </form>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Id Number</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">email</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Role</th>
+
+            </tr>
+        </thead>
+        {% for admin in admin %}
+
+        <tr>
+
+            <td>{{admin.first_name}}
+            </td>
+            <td>{{admin.last_name}}
+            </td>
+            <td>{{admin.username}}
+            </td>
+            <td>{{admin.id_number}}
+            </td>
+            <td>{{admin.phone_number}}
+            </td>
+            <td>{{admin.email}}
+            </td>
+            <td>{{admin.gender}}
+            </td>
+            <td>{{admin.role}}
+            </td>
+            <td>
+                <div class="btn btn-primary btn-block">
+                    <a href="#" class="btn btn-warning btn-block" data-bs-target="#updatedetailsmodal" data-bs-toggle="modal" id="{{admin.username}}" onclick="updateAdmin(this.id)">update</a>
+                </div>
+
+                <div class="modal fade" id="updatedetailsmodal">
+                    <div class="modal-dialog bg-primary">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h1 class="modal-title" id="changepasswordmodall">update details</h1>
+                                <button class="close" data-bs-dismiss="modal">&times;</button>
+
+                            </div>
+                            <div class="modal-body">
+
+                                <form action="{{url_for('updateadm')}}" method="POST"><input type="text" value="{{admin.username}}" name="username" hidden> <input type="submit" value="Edit">
+                                    <div class="form-group">
+                                        <label class="form-control-label">First Name</label>
+                                        <input type="text" value="" class="form-control" name="first_name" id="first_name" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-control-label">Last Name</label>
+                                        <input type="text" value="" class="form-control" name="last_name" id="last_name" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-control-label">Username</label>
+                                        <input type="text" value="" class="form-control" name="username" id="username" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-control-label">Id Number</label>
+                                        <input type="number" value="" class="form-control" name="id_number" id="id_number" required minlength="7" maxlength="8">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-control-label">Phone Number</label>
+                                        <input type="number" value="" class="form-control" name="phone_number" id="phone_number" required minlength="10" maxlength="10">
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="form-control-label">Email</label>
+                                        <input type="email" value="" class="form-control" name="email" id="email" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-control-label">Gender</label>
+                                        <input type="text" value="" class="form-control" name="gender" id="gender" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-control-label">Role</label>
+                                        <input type="text" value="" class="form-control" name="role" id="role" required>
+                                    </div>
+
+                                    <button class="btn btn-primary " type="submit">submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+    <script>
+        function updateAdmin(id) {
+            const url = location.protocol + '//' + location.host + '/serializedadmins';
+            (fetch(url).then(response => response.json()).then(json => {
+                console.log(json);
+                admin1(JSON.parse(json), id);
+
+            }))
+        }
+
+        function admin1(data, id) {
+            var first_name = document.querySelector('#first_name');
+            var last_name = document.querySelector('#last_name');
+            var username = document.querySelector('#username');
+            var email = document.querySelector('#email');
+            var id_number = document.querySelector('#id_number');
+            var phone_number = document.querySelector('#phone_number');
+            var gender = document.querySelector('#gender');
+            var role = document.querySelector('#role');
+
+
+
+            for (let i = 0; i <= data.length; i++) {
+                if (id == data[i].username) {
+                    first_name.value = data[i].first_name;
+                    last_name.value = data[i].last_name;
+                    username.value = data[i].username;
+                    email.value = data[i].email;
+                    id_number.value = data[i].id_number;
+                    phone_number.value = data[i].phone_number;
+                    gender.value = data[i].gender;
+                    role.value = data[i].role;
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>

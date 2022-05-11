@@ -1,0 +1,114 @@
+<html>
+{% include 'partials/nav.html' %}
+<script src="public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title>Add car</title>
+</head>
+
+<body>
+
+    {% for message in get_flashed_messages()%} {{message}} {%endfor%}
+
+
+    <form action="{{url_for('addcar')}}" enctype="multipart/form-data" method="POST">
+        <div class="container-fluid bg-light py-3">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card card-body" style="background-color: bisque;">
+                        <h3 class="text-center mb-4">Sign-up</h3>
+                        <!-- <div class="alert alert-danger">
+                                            <a class="close font-weight-light" data-dismiss="alert" href="#">×</a>Password is too short.
+                                        </div> -->
+                        <fieldset>
+                            <div class="form-group has-error">
+                                <label class="form-control-label">Number plate</label>
+                                <input class="form-control input-lg" placeholder="Number Plate" name="number_plate" type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="model">Model</label>
+                                <select id="model" name="model" class="form-control" required>
+                                                <option value="1"></option>
+                                                <option value="Sport Car">Sport Car</option>
+                                                <option value="Repair Car">Repair Car</option>
+                                                <option value="Car Sale">Car Sale</option>
+                                                <option value="Car Hire">Car Hire</option>
+                                                </select>
+                            </div>
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Capacity</label>
+                                <input class="form-control input-lg" placeholder="Capacity" name="capacity" value="" type="number" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>gear</label>
+                                <div class="form-control">
+                                    <label class="radio-inline">
+                                                <input type="radio" name="gear" value="automatic" required>
+                                                Automatic
+                                                </label>
+                                    <label class="radio-inline">
+                                                <input type="radio" name="gear" value="manual" required>
+                                                Manual
+                                                </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Number of Cars</label>
+                                <input class="form-control input-lg" placeholder="Number of cars" name="no_of_cars" value="" type="number" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Logbook number</label>
+                                <input class="form-control input-lg" placeholder="Logbook number" name="logbook_number" value="" type="text" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Origin</label>
+                                <input class="form-control input-lg" placeholder="Origin" name="origin" value="" type="text" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="brand">Brand</label>
+                                <select id="brand" name="brand" class="form-control" required>
+                                                <option value="1"></option>
+                                                <option value="Add Car">Add Car</option>
+                                                <option value="Repair Car">Repair Car</option>
+                                                <option value="Car Sale">Car Sale</option>
+                                                <option value="Car Hire">Car Hire</option>
+                                                </select>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">price in dollars</label>
+                                <input class="form-control input-lg" placeholder="Price" name="price" value="" type="number">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="engine">Engine</label>
+                                <select id="engine" name="engine" class="form-control" required>
+                                                <option value="1"></option>
+                                                <option value="V8">V8</option>
+                                                <option value="Repair Car">Repair Car</option>
+                                                <option value="Car Sale">Car Sale</option>
+                                                <option value="Car Hire">Car Hire</option>
+                                                </select>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Upload photo</label>
+                                <input class="form-control input-lg" placeholder="photo" name="file" value="" type="file" required>
+                            </div>
+
+                            <input class="btn btn-lg btn-primary btn-block" value="save" type="submit">
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

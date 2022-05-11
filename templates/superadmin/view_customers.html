@@ -1,0 +1,58 @@
+<html>
+{% include 'partials/nav.html' %}
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title>welcome</title>
+</head>
+
+<body>
+
+
+    <form action="{{url_for('viewcustomers')}}" method="post">
+        <input type="text" placeholder="search by first_name,last_name,email,regnumber" id="search" name="search">
+        <input type="submit" value="submit">
+    </form>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Id Number</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">email</th>
+                <th scope="col">Gender</th>
+
+            </tr>
+        </thead>
+        {% for user in user %}
+
+        <tr>
+
+            <td>{{user.first_name}}
+            </td>
+            <td>{{user.last_name}}
+            </td>
+            <td>{{user.username}}
+            </td>
+            <td>{{user.id_number}}
+            </td>
+            <td>{{user.phone_number}}
+            </td>
+            <td>{{user.email}}
+            </td>
+            <td>{{user.gender}}
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+
+</html>

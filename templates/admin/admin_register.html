@@ -1,0 +1,91 @@
+<html>
+<script src="public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title>Admin registration</title>
+</head>
+
+<body>
+
+    {% for message in get_flashed_messages() %} {{message}} {%endfor%}
+
+
+    <form action="{{url_for('admin')}}" method="POST">
+        <div class="container-fluid bg-light py-3">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card card-body">
+                        <h3 class="text-center mb-4">Sign-up</h3>
+
+                        <fieldset>
+                            <div class="form-group has-error">
+                                <label class="form-control-label">First Name</label>
+                                <input class="form-control input-lg" placeholder="First name" name="first_name" type="text" required>
+                            </div>
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Last Name</label>
+                                <input class="form-control input-lg" placeholder="Last name" name="last_name" type="text" required>
+                            </div>
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Username</label>
+                                <input class="form-control input-lg" placeholder="username" name="username" value="" type="text" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Id Number</label>
+                                <input class="form-control input-lg" placeholder="id_number" name="id_number" value="" type="number" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Phone Number</label>
+                                <input class="form-control input-lg" placeholder="Phone number" name="phone_number" value="" type="number" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Email</label>
+                                <input class="form-control input-lg" placeholder="Email Address" name="email" value="" type="email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="role">Role</label>
+                                <select id="role" name="role" class="form-control" required>
+                                                <option value="1"></option>
+                                                <option value="Add Car">Add Car</option>
+                                                <option value="Repair Car">Repair Car</option>
+                                                <option value="Car Sale">Car Sale</option>
+                                                <option value="Car Hire">Car Hire</option>
+                                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <div class="form-control">
+                                    <label class="radio-inline">
+                                                <input type="radio" name="gender" value="male" required>
+                                                Male
+                                                </label>
+                                    <label class="radio-inline">
+                                                <input type="radio" name="gender" value="female" required>
+                                                Female
+                                                </label>
+                                </div>
+                            </div>
+
+
+
+                            <div class="checkbox">
+                                <label class="small">
+                                                                <input name="terms" type="checkbox"> I have read and agree to the <a href="#">terms and conditions</a>
+                                                        </label>
+                            </div>
+                            <input class="btn btn-lg btn-info btn-block" value="save" type="submit">
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

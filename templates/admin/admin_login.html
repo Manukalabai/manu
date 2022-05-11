@@ -1,0 +1,46 @@
+<html>
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <form action="{{url_for('admin_login')}}" method="POST">
+        <div class="container-fluid bg-light py-3">
+            <div class="row">
+                <div class="col-md-4 mx-auto">
+                    <div class="card card-body" style="background-color:darkseagreen;">
+                        <h3 class="text-center mb-4">login</h3>
+                        <!-- <div class="alert alert-danger">
+                                            <a class="close font-weight-light" data-dismiss="alert" href="#">×</a>Password is too short.
+                                        </div> -->
+                        <fieldset>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Username</label>
+                                <input class="form-control input-lg" placeholder="username" name="username" value="" type="username" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Password</label>
+                                <input class="form-control input-lg" placeholder="password" name="password" value="" type="password" required>
+                            </div>
+
+                            <div class="checkbox">
+                                <label class="small">
+                                                    <input name="terms" type="checkbox"> Remember me <a href="#"></a>
+                                                </label>
+                            </div>
+                            <input class="btn btn-lg btn-primary btn-block" value="submit" type="submit"><br> forgot password?
+                            <a href="">Click here</a>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>
