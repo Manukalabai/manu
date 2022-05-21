@@ -1,7 +1,5 @@
 <html>
-{% include 'partials/nav.html' %}
-<script src="public/bootstrap/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="public/bootstrap/css/bootstrap.min.css" />
+{% include 'partials/nav.html' %} {% include 'partials/headers.html' %}
 
 <head>
     <title>Add car</title>
@@ -9,7 +7,14 @@
 
 <body>
 
-    {% for message in get_flashed_messages()%} {{message}} {%endfor%}
+    <div class="text-center">
+        {% with messages= get_flashed_messages (with_categories=true) %} {% for category,message in messages %}
+        <div class="{{category}}">
+            {{message}}
+        </div>
+        {% endfor %} {% endwith %}
+
+    </div>
 
 
     <form action="{{url_for('addcar')}}" enctype="multipart/form-data" method="POST">
@@ -45,12 +50,40 @@
                                 <label>gear</label>
                                 <div class="form-control">
                                     <label class="radio-inline">
-                                                <input type="radio" name="gear" value="automatic" required>
+                                                <input type="radio" name="gear" value="Automatic" required>
                                                 Automatic
                                                 </label>
                                     <label class="radio-inline">
-                                                <input type="radio" name="gear" value="manual" required>
+                                                <input type="radio" name="gear" value="Manual" required>
                                                 Manual
+                                                </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Fuel</label>
+                                    <div class="form-control">
+                                        <label class="radio-inline">
+                                                    <input type="radio" name="fuel" value="Diesel" required>
+                                                    Diesel
+                                                    </label>
+                                        <label class="radio-inline">
+                                                    <input type="radio" name="fuel" value="petrol" required>
+                                                    Petrol
+                                                    </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Drive Type</label>
+                                <div class="form-control">
+                                    <label class="radio-inline">
+                                                <input type="radio" name="drive_type" value="4 Wheel Drive" required>
+                                                2 Wheel Drive
+                                                </label>
+                                    <label class="radio-inline">
+                                                <input type="radio" name="drive_type" value="2 Wheel Drive" required>
+                                                4 Wheel Drive
                                                 </label>
                                 </div>
                             </div>
@@ -58,6 +91,32 @@
                             <div class="form-group has-success">
                                 <label class="form-control-label">Number of Cars</label>
                                 <input class="form-control input-lg" placeholder="Number of cars" name="no_of_cars" value="" type="number" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Mileage</label>
+                                <input class="form-control input-lg" placeholder="mileage" name="mileage" value="" type="text" required>
+                            </div>
+
+
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Engine Size</label>
+                                <input class="form-control input-lg" placeholder="Engine Size" name="engine_size" value="" type="text" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Steering</label>
+                                <div class="form-control">
+                                    <label class="radio-inline">
+                                                <input type="radio" name="steering" value="Right" required>
+                                                Right
+                                                </label>
+                                    <label class="radio-inline">
+                                                <input type="radio" name="steering" value="Left" required>
+                                                Left
+                                                </label>
+                                </div>
                             </div>
 
                             <div class="form-group has-success">
@@ -74,7 +133,7 @@
                                 <label for="brand">Brand</label>
                                 <select id="brand" name="brand" class="form-control" required>
                                                 <option value="1"></option>
-                                                <option value="Add Car">Add Car</option>
+                                                <option value="Prado">Prado</option>
                                                 <option value="Repair Car">Repair Car</option>
                                                 <option value="Car Sale">Car Sale</option>
                                                 <option value="Car Hire">Car Hire</option>
@@ -91,10 +150,39 @@
                                 <select id="engine" name="engine" class="form-control" required>
                                                 <option value="1"></option>
                                                 <option value="V8">V8</option>
-                                                <option value="Repair Car">Repair Car</option>
+                                                <option value="Toyota">Toyota</option>
                                                 <option value="Car Sale">Car Sale</option>
                                                 <option value="Car Hire">Car Hire</option>
                                                 </select>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Min Engine.cc</label>
+                                <input class="form-control input-lg" placeholder="Min Engine.cc" name="min_engcc" value="" type="text" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Max Engine.cc</label>
+                                <input class="form-control input-lg" placeholder="Max Engine.cc" name="max_engcc" value="" type="text" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Colour</label>
+                                <input class="form-control input-lg" placeholder="Colour" name="colour" value="" type="text" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Purpose</label>
+                                <div class="form-control">
+                                    <label class="radio-inline">
+                                                <input type="radio" name="purpose" value="To be sold" required>
+                                                To be sold
+                                                </label>
+                                    <label class="radio-inline">
+                                                <input type="radio" name="purpose" value="To be hired" required>
+                                                To be hired
+                                                </label>
+                                </div>
                             </div>
 
                             <div class="form-group has-success">

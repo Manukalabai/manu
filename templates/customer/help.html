@@ -1,0 +1,45 @@
+<html>
+{% include 'partials/adm_nav.html' %}
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <form action="{{url_for('help')}}" method="POST">
+        <h1> Welcome to car dealer </h1>
+        <h1 style="color: red;">How to buy car</h1>
+        <p>
+            For one to buy car from our company,you should be a registered member. You can view availble cars for hire and for sale but before you are served,first you have to rigister To register,you are required to fill in your details in the registration form.
+            After that a one time password will be send to your email,the one time password together with the username will be required to log into the system. After you have logged in,you can change your password to a memorable one but it should have
+            atleast seven characters After a successful login,You can view the available cars for sale by clicking on view cars button.You can then select the cars you want by adding to cart. Afer the selection you can then make payment and wait for a
+            notification messsage via email on when to pick up your car after the manager has approved.
+
+
+        </p>
+        <h1 style="color: red;">How to hire a car</h1>
+
+        <p>
+            For one to hire car from our company,you should be a registered member. You can view availble cars for hire and for sale but before you are served,first you have to rigister To register,you are required to fill in your details in the registration form.
+            After that a one time password will be send to your email,the one time password together with the username will be required to log into the system. After you have logged in,you can change your password to a memorable one but it should have
+            atleast seven characters After a successful login,You can view the available cars for hire by clicking on view cars button.You can then select the cars you want. Afer the selection you click on 'hire' button and wait for a notification messsage
+            via email on when and where to pick up the car after the manager has approved.
+
+        </p>
+
+        <h1 style="color: red;">How to book an appointment for car repair</h1>
+
+        <p>
+            For one to book an appointment for car repair from our company,you should be a registered member. You can view availble cars for hire and for sale but before you are served,first you have to rigister To register,you are required to fill in your details
+            in the registration form. After that a one time password will be send to your email,the one time password together with the username will be required to log into the system. After you have logged in,you can change your password to a memorable
+            one but it should have atleast seven characters After a successful login,You can book an appointment on car repair by clicking on book appoitment button. Upon clicking on this button,you will be required to specify your the issue on your car,
+            and the time and date you would like to come for the car repair. A message would be send to you if the specified time would make or if not the reason will be given and another specified time would be send.If you will be confortable with that
+            time then you can reply to that message and your time will be set.
+
+        </p>
+    </form>
+</body>
+
+</html>

@@ -212,14 +212,14 @@ def changepassword():
             if not request.form['old_password'] or not request.form['new_password'] or not request.form['confirm_password']:                
                 flash("fill in all the details")
             elif not request.form['new_password'] == request.form['confirm_password']:
-                flash("the new password and confirmed passwords don't match")
+                flash("the new password and confirmed passwords don't match", 'error')
             elif not sha256_crypt.verify(request.form['old_password'],superadmin.password):
-                flash(" please enter the correct old password")
+                flash(" please enter the correct old password", 'error')
                 return redirect(url_for("changepassword"))
             else:
                 superadmin.password= sha256_crypt.encrypt(request.form['new_password'])
                 superadmin.save()
-                flash("password changed successfully")
+                flash("password changed successfully",'success')
                 return render_template("superadmin/superadmin_dashboard.html")
             
 @app.route("/upadatepassword",methods=["POST","GET"])
@@ -228,16 +228,16 @@ def updatepassword():
         if "user" in session:
             user = customer_registration.query.filter(customer_registration.username==session['user']).first()
             if not request.form['old_password'] or not request.form['new_password'] or not request.form['confirm_password']:                
-                flash("fill in all the details")
+                flash("fill in all the details", 'error')
             elif not request.form['new_password'] == request.form['confirm_password']:
-                flash("the new password and confirmed passwords don't match")
+                flash("the new password and confirmed passwords don't match", 'error')
             elif not sha256_crypt.verify(request.form['old_password'],user.password):
-                flash(" please enter the correct old password")
+                flash(" please enter the correct old password", 'error')
                 return redirect(url_for("updatepassword"))
             else:
                 user.password= sha256_crypt.encrypt(request.form['new_password'])
                 user.save()
-                flash("password changed successfully")
+                flash("password changed successfully", 'success')
                 return redirect(url_for('customer_login'))
 
 @app.route("/chanagepassworda",methods=["POST","GET"])
@@ -246,17 +246,17 @@ def changepassworda():
         if "admin" in session:
             admin = admin_registration.query.filter(admin_registration.username==session['admin']).first()
             if not request.form['old_password'] or not request.form['new_password'] or not request.form['confirm_password']:                
-                flash("fill in all the details")
+                flash("fill in all the details", 'error')
             elif not request.form['new_password'] == request.form['confirm_password']:
-                flash("the new password and confirmed passwords don't match")
+                flash("the new password and confirmed passwords don't match", 'error')
             elif not sha256_crypt.verify(request.form['old_password'],admin.password):
-                flash(" please enter the correct old password")
+                flash(" please enter the correct old password" ,'error')
                 return redirect(url_for("changepassworda"))
             else:
                 admin.password= sha256_crypt.encrypt(request.form['new_password'])
                 admin.save()
-                flash("password changed successfully")
-                return render_template("admin/admin_dashboard.html")
+                flash("password changed successfully", 'success')
+            return redirect(url_for('admin_login'))
 
 
 @app.route("/viewadmins", methods=["POST", "GET"])
@@ -269,6 +269,43 @@ def viewcustomers():
     user = customer_registration.query.all()
     return render_template("superadmin/view_customers.html", user=user)
 
+
+@app.route("/selectcartobeviewed", methods=["POST", "GET"])
+def selectcartobeviewed():
+    car = add_car.query.all()
+    return render_template("customer/select_car_to_be_viewed.html", car=car)
+
+@app.route("/viewcars", methods=["POST", "GET"])
+def viewcars():
+    car = add_car.query.all()
+    return render_template("customer/view_cars.html", car=car)
+
+@app.route("/viewcars2", methods=["POST", "GET"])
+def viewcars2():
+        car = add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
+        return render_template("customer/view_cars2.html", car=car)
+
+@app.route("/viewcars3", methods=["POST", "GET"])
+def viewcars3():
+        car = add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
+        return render_template("customer/view_cars3.html", car=car)
+
+@app.route("/viewcartobesold", methods=["POST", "GET"])
+def viewcarstobesold():
+    car=add_car.query.filter(add_car.purpose==request.args.get('filter')).all()
+    return render_template("customer/view_cars.html", car=car)
+
+@app.route("/viewcartobehired", methods=["POST", "GET"])
+def viewcarstobehired():
+    car=add_car.query.filter(add_car.purpose==request.args.get('filter')).all()
+    return render_template("customer/view_cars.html", car=car)
+
+
+
+@app.route("/viewcarsbyadmin", methods=["POST","GET"])
+def viewcarsbyadmin():
+    car = add_car.query.all()
+    return render_template("admin/view_cars_by_admin.html", car=car)
 
 @app.route("/update_customer_details",methods=["POST","GET"])
 def update():
@@ -300,7 +337,7 @@ def updatedetails():
             admin.phone_number = request.form['phone_number']
             admin.id_number = request.form['id_number']
             admin.save()
-            flash("details updated successfully")
+            flash("details updated successfully" ,'success')
     return redirect(url_for("admin_login"))
 
 @app.route("/updateadm",methods=["POST","GET"])
@@ -349,16 +386,68 @@ def addcar():
         #  code to addcar
         car=add_car.query.all()
         if add_car.query.filter(add_car.number_plate == request.form['number_plate']).first():
-            flash('The car has already been added')
+            flash('The car has already been added' ,'error')
             return redirect(url_for('addcar'))
-        newcar=add_car(number_plate=request.form['number_plate'],model=request.form['model'],capacity=request.form['capacity'],gear=request.form['gear'],no_of_cars=request.form['no_of_cars'],logbook_number=request.form['logbook_number'],origin=request.form['origin'],brand=request.form['brand'],price=request.form['price'],engine=request.form['engine'],image=filename)
+        newcar=add_car(number_plate=request.form['number_plate'],model=request.form['model'],capacity=request.form['capacity'],gear=request.form['gear'],no_of_cars=request.form['no_of_cars'],logbook_number=request.form['logbook_number'],origin=request.form['origin'],purpose=request.form['purpose'],brand=request.form['brand'],price=request.form['price'],engine=request.form['engine'],fuel=request.form['fuel'],drive_type=request.form['drive_type'],mileage=request.form['mileage'],engine_size=request.form['engine_size'],steering=request.form['steering'],min_engcc=request.form['min_engcc'],max_engcc=request.form['max_engcc'],colour=request.form['colour'],image=filename)
         newcar.save()
-        flash("The car has been added successfully") 
+        flash("The car has been added successfully" ,'success') 
         return render_template("admin/add_new_car.html")             
     return render_template("admin/add_new_car.html") 
 
     if request.method == "GET":        
         return render_template("admin/add_new_car.html")
+
+# @app.route("/hirecar",methods=["POST","GET"])
+# def hirecar():
+#     if request.method=="POST":
+#         car=add_car.query.filter(add_car.number_plate==request.form['number_plate']).first()
+
+#         customer=customer_registration.query.filter(customer_registration.username==session['user']).first()
+#         if car_hire.query.filter(and_(car_hire.username==customer.username,car_hire.number_plate==customer.username)).first():
+#             flash("you have already hired this car")
+#             return redirect(url_for('viewcars'))
+#         new_hire=car_hire(number_plate=car.number_plate,username=customer.username,phone_number=customer.phone_number,id_number=customer.id_number,email=customer.email,model=car.model,gear=car.gear,brand=car.brand,charge=((returned_date - returning_date)*1000),engine=car.engine,fuel=car.fuel,mileage=car.mileage,colour=car.colour,date_of_hire=date.now(),returning_date=date.now()+timedelta(7),hiring_id=uuid.uuid4())
+#         new_hire.save()
+#         flash('your hiring process has been successfully submitted kindly wait for an approval message from the manager ')
+#     return redirect(url_for(''))
+
+@app.route("/hiredcardetails", methods=["POST","GET"])
+def hiredcardetails():
+    if request.method=="POST":
+        car=add_car.query.filter(add_car.number_plate==request.form['number_plate']).first()
+
+        custome=customer_registration.query.filter(customer_registration.username==session['user']).first()
+        if hired_car_details.query.filter(and_(hired_car_details.username==customer.username,hired_car_details.number_plate==customer.username)).first():
+
+            flash("you have already hired this car")
+            return redirect(url_for('viewcars'))
+        new_hire=hired_car_details(number_plate=car.number_plate,hiring_date=request.form['hiring_date'],returning_date=request.form['returning_date'],hiring_id= uuid.uuid4(),period=('returning_date')-('hiring_date'),amount=('period')*add_car.price)
+        new_hire.save()
+        flash('your hiring process has been successfully submitted kindly wait for an approval message from the manager ')
+    return redirect(url_for('hiredcardetails'))
+
+
+@app.route("/about",methods=["GET","POST"])
+def about():
+    if request.method=="GET":
+        return render_template("customer/about.html")
+
+@app.route("/help",methods=["GET","POST"])
+def help():
+    if request.method=="GET":
+        return render_template("customer/help.html")
+
+
+@app.route('/backhome')
+def backhome():
+    if 'user' in session:
+        return redirect(url_for("customer_login")) 
+    elif 'admin' in session:
+        return redirect(url_for("admin_login"))
+    elif 'superadmin' in session:
+        return redirect(url_for("superadmin_login"))
+    elif 'maneger' in session:
+        return redirect(url_for("manager_login"))
     
 
 @app.route('/logout')

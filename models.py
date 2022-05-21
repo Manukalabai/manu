@@ -1,5 +1,6 @@
 from enum import unique
 from operator import add
+import re
 from flask_sqlalchemy import SQLAlchemy 
 from passlib.hash import sha256_crypt
 db=SQLAlchemy()
@@ -157,9 +158,20 @@ class add_car(db.Model):
         brand=db.Column(db.String,nullable=False)
         price=db.Column(db.Integer)
         engine=db.Column(db.String,nullable=False)
+        purpose=db.Column(db.String,nullable=True)
+
+        fuel=db.Column(db.String,nullable=False)
+        drive_type=db.Column(db.String,nullable=False)
+        mileage=db.Column(db.String,nullable=False)
+        engine_size=db.Column(db.String,nullable=False)
+        steering=db.Column(db.String,nullable=False)
+        min_engcc=db.Column(db.String,nullable=False)
+        max_engcc=db.Column(db.String,nullable=False)
+        colour=db.Column(db.String,nullable=False)
+        
         image=db.Column(db.String,nullable=False)
 
-        def __init__(self,number_plate,model,capacity,gear,no_of_cars,logbook_number,origin,brand,price,engine,image):
+        def __init__(self,number_plate,model,capacity,gear,no_of_cars,logbook_number,origin,brand,price,engine,fuel,drive_type,mileage,engine_size,steering,purpose,min_engcc,max_engcc,colour,image):
                 self.number_plate=number_plate
                 self.model=model
                 self.capacity=capacity
@@ -170,7 +182,81 @@ class add_car(db.Model):
                 self.brand=brand  
                 self.price=price 
                 self.engine=engine
+                self.purpose=purpose
+
+                self.fuel=fuel
+                self.drive_type=drive_type
+                self.mileage=mileage
+                self.engine_size=engine_size
+                self.steering=steering
+                self.min_engcc=min_engcc
+                self.max_engcc=max_engcc
+                self.colour=colour
+
+
                 self.image=image          
+
+        def save(self):
+                db.session.add(self)
+                db.session.commit()
+
+# class car_hire(db.Model):
+#         __tablename__='car_hire'
+#         hiring_id=db.Column(db.String,nullable=False,primary_key=True)
+#         username = db.Column(db.String ,db.ForeignKey('customer_registration.username'),nullable=False)
+#         id_number=db.Column(db.Integer,nullable=False,unique=True)
+#         phone_number=db.Column(db.Integer,nullable=False, unique=True)
+#         email=db.Column(db.String,nullable=False)
+#         number_plate = db.Column(db.String ,db.ForeignKey('customer_registration.number_plate'),nullable=False)
+#         model=db.Column(db.String,nullable=False)
+#         gear=db.Column(db.String,nullable=False)
+#         brand=db.Column(db.String,nullable=False)
+#         charges=db.Column(db.Integer,nullable=False)
+#         engine=db.Column(db.String,nullable=False)
+#         fuel=db.Column(db.String,nullable=False)
+#         mileage=db.Column(db.String,nullable=False)
+#         colour=db.Column(db.String,nullable=False)
+#         date_of_hire=db.Column(db.String,nullable=False)
+#         returning_date=db.Column(db.String,nullable=False)
+
+#         def __init__(self,hiring_id,username, id_number,phone_number,email,number_plate,model,gear,brand,charges,engine,fuel,mileage,colour,date_of_hire,returning_date):
+#                 self.hiring_id=hiring_id
+#                 self.username=username
+#                 self.id_number=id_number
+#                 self.phone_number=phone_number
+#                 self.email=email
+#                 self.number_plate=number_plate
+#                 self.model=model    
+#                 self.gear=gear 
+#                 self.brand=brand
+#                 self.charges=charges
+#                 self.engine=engine
+#                 self.fuel=fuel
+#                 self.mileage=mileage
+#                 self.colour=colour
+#                 self.date_of_hire=date_of_hire
+#                 self.returning_date=returning_date 
+
+        def save(self):
+                db.session.add(self)
+                db.session.commit()
+
+class hired_car_details(db.Model):
+        __tablename__='hired_car_details'
+        number_plate=db.Column(db.String,db.ForeignKey('add_car.number_plate'),nullable=False, unique=True)
+        hiring_id=db.Column(db.String,primary_key=True)
+        hiring_date=db.Column(db.String,nullable=False)
+        returning_date=db.Column(db.String,nullable=False)
+        period=db.Column(db.String, nullable=False)
+        amount=db.Column(db.Integer,nullable=False)
+        
+        def __init__(self,number_plate,hiring_id,hiring_date,returning_date,period,amount):
+                self.number_plate=number_plate
+                self.hiring_id=hiring_id
+                self.hiring_date=hiring_date
+                self.returning_date=returning_date
+                self.period=period
+                self.amount=amount
 
         def save(self):
                 db.session.add(self)

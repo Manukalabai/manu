@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html>
-{% include 'partials/nav.html' %}
+{% include 'partials/adm_nav.html' %}{% include 'partials/headers.html' %}
 <script src="/public/bootstrap/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
 
 <head>
-    {% for message in get_flashed_messages() %} {{message}} {%endfor%}
+    <div class="text-center">
+        {% with messages= get_flashed_messages (with_categories=true) %} {% for category,message in messages %}
+        <div class="{{category}}">
+            {{message}}
+        </div>
+        {% endfor %} {% endwith %}
+
+    </div>
     <tItle></tItle>
 </head>
 <div class="container mt-5">
@@ -22,13 +29,13 @@
 
 
         <div class="col">
-            <a href="#" class="btn btn-primary btn-block">
+            <a href="{{url_for('viewcustomers')}}" class="btn btn-primary btn-block">
                 <i></i>view customers
             </a>
         </div>
 
         <div class="col">
-            <a href="#" class="btn btn-primary btn-block">
+            <a href="{{url_for('viewcarsbyadmin')}}" class="btn btn-primary btn-block">
                 <i></i>view cars
             </a>
         </div>
@@ -142,7 +149,7 @@
         </div>
 
         <div class="col">
-            <a href="#" class="btn btn-primary btn-block">
+            <a href="{{url_for('viewcarsbyadmin')}}" class="btn btn-primary btn-block">
                 <i></i>view cars
             </a>
         </div>
@@ -255,7 +262,7 @@
         </div>
 
         <div class="col">
-            <a href="#" class="btn btn-primary btn-block">
+            <a href="{{url_for('viewcarsbyadmin')}}" class="btn btn-primary btn-block">
                 <i></i>view cars
             </a>
         </div>
@@ -369,7 +376,7 @@
         </div>
 
         <div class="col">
-            <a href="#" class="btn btn-primary btn-block">
+            <a href="{{url_for('viewcarsbyadmin')}}" class="btn btn-primary btn-block">
                 <i></i>view cars
             </a>
         </div>

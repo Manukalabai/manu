@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'partials/nav1.html' %}
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>view cows</title>
+</head>
+
+<body>
+
+    <div class="row">
+        {% for car in car %}
+        <div class=" card col-md-3 text-center">
+            <div class="card-header">
+                <div class="card-title">
+                    <h5 class="text-center" id="" value="">{{car.number_plate}}</h5>
+
+                </div>
+
+                <div class="">
+                    <span class="text-muted"> <img  style="height: 250px; width: 250px" src="public/carimages/{{car.image}}" alt=""></span>
+                </div>
+                <div>
+                    <span class="text-muted"> origin:{{car.origin}}</span>
+                </div>
+                <div>
+                    <span class="text-muted">Model:{{car.model}}</span>
+                </div>
+                <div>
+                    <span class="text-muted">Gear:{{car.gear}}</span>
+                </div>
+
+                <div>
+                    <span class="text-muted">Engine:{{car.engine}}</span>
+                </div>
+                <div>
+                    <span class="text-muted">Capacity:{{car.capacity}}</span>
+                </div>
+                <div>
+                    <span class="text-muted">Steering:{{car.steering}}</span>
+                </div>
+                <div>
+                    <span class="text-muted">Fuel:{{car.fuel}}</span>
+                </div>
+                <div>
+                    <span class="text-muted">colour:{{car.colour}}</span>
+                </div>
+                <div>
+                    <span class="text-muted">Price in $:{{car.price}}</span>
+                </div>
+                <div class="col">
+                    <a href="{{url_for('viewcars3',number_plate=car.number_plate)}}" class="btn btn-primary btn-block">
+                        <i></i>view
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+
+        {% endfor %}
+    </div>
+
+</body>
+
+</html>

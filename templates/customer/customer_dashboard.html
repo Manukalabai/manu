@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html>
-{% include 'partials/nav.html' %}
+{% include 'partials/dashboard.html' %} {% include 'partials/headers.html' %}
 <script src="/public/bootstrap/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
 
 
 <head>
-    {% for message in get_flashed_messages()%} {{message}} {%endfor%}
+    <div class="text-center">
+        {% with messages= get_flashed_messages (with_categories=true) %} {% for category,message in messages %}
+        <div class="{{category}}">
+            {{message}}
+        </div>
+        {% endfor %} {% endwith %}
+
+    </div>
     <tItle></tItle>
 </head>
 <div class="container mt-5">
@@ -14,7 +21,7 @@
 
 
         <div class="col">
-            <a href="#" class="btn btn-primary btn-block">
+            <a href="{{url_for('selectcartobeviewed')}}" class="btn btn-primary btn-block">
                 <i></i>view cars
             </a>
 
@@ -103,12 +110,12 @@
 
                             <div class="form-group">
                                 <label class="form-control-label">New password</label>
-                                <input type="password" class="form-control" name="new_password" id="New password" required minlength="7">
+                                <input type="password" class="form-control" name="new_password" id="New password" required>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-control-label">confirm password</label>
-                                <input type="password" class="form-control" name="confirm_password" id="confirm password" required minlength="7">
+                                <input type="password" class="form-control" name="confirm_password" id="confirm password" required>
                             </div>
 
                             <button class="btn btn-primary " input type="submit" value="submit">submit</button>

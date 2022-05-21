@@ -1,0 +1,65 @@
+<html>
+{% include 'partials/nav.html' %} {% include 'partials/headers.html' %}
+<!-- <script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" /> {% include 'partials/nav1.html' %} -->
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <div class="text-center">
+        {% with messages= get_flashed_messages (with_categories=true) %} {% for category,message in messages %}
+        <div class="{{category}}">
+            {{message}}
+        </div>
+        {% endfor %} {% endwith %}
+
+    </div>
+    <form action="{{url_for('hiredcardetails')}}" method="POST">
+        <div class="container-fluid bg-light py-5">
+            <div class="row">
+                <div class="col-md-4 mx-auto">
+                    <div class="card card-body" style="background-color:bisque;">
+                        <h3 class="text-center mb-4" style="color: black;">please fill in the following details the click submit button for car hiring</h3>
+                        <!-- <div class="alert alert-danger">
+                                            <a class="close font-weight-light" data-dismiss="alert" href="#">×</a>Password is too short.
+                                        </div> -->
+                        <fieldset>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Hiring Date</label>
+                                <input class="form-control input-lg" placeholder="hiring date" name="hiring_date" value="" type="date" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Returning date</label>
+                                <input class="form-control input-lg" placeholder="Returning Date" name="returning_date" value="" type="date" required><br>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Number Plate</label>
+                                <input class="form-control input-lg" placeholder="Number Plate" name="number_plate" value="" type="text" required><br>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">period</label>
+                                <input class="form-control input-lg" placeholder="period" name="period" value="" type="number" required><br>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Amount</label>
+                                <input class="form-control input-lg" placeholder="Amount" name="amount" value="" type="number" required><br>
+                            </div>
+
+                            <input class="btn btn-lg btn-primary btn-block" value="submit" type="submit"><br>
+
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

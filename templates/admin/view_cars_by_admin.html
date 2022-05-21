@@ -1,0 +1,67 @@
+<html>
+{% include 'partials/nav.html' %}
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title></title>
+</head>
+
+<body>
+
+
+    <form action="#" method="post">
+        <input type="text" placeholder="search by Number plate,Model,Price, id=" search " name="search ">
+                <input type="submit " value="submit ">
+                </form>
+
+
+        <table class="table ">
+                <thead>
+                        <tr>
+
+                                <th scope="col ">Number Plate</th>
+                                <th scope="col ">Model</th>
+                                <th scope="col ">Gear</th>
+                                <th scope="col ">Brand</th>
+                                <th scope="col ">Price in $</th>
+                                <th scope="col ">Engine</th>
+                                <th scope="col ">Fuel</th>
+                                <th scope="col ">Steering</th>
+                                <th scope="col ">pupose</th>
+                                <th scope="col ">Image</th>
+
+                        </tr>
+                </thead>
+                {% for car in car %}
+
+                <tr>
+
+                        <td>{{car.number_plate}}
+                        </td>
+                        <td>{{car.model}}
+                        </td>
+                        <td>{{car.gear}}
+                        </td>
+                        <td>{{car.brand}}
+                        </td>
+                        <td>{{car.price}}
+                        </td>
+                        <td>{{car.engine}}
+                        </td>
+                        <td>{{car.fuel}}
+                        </td>
+                        <td>{{car.steering}}
+                        </td>
+                        <td>{{car.purpose}}
+                        </td>
+                        <td>        
+                                <span class="text-muted "> <img  style="height: 50px; width: 50px " src="public/carimages/{{car.image}} " alt=" "></span>           
+                        </td> 
+
+                </tr>
+                {% endfor %}
+        </table>
+
+        </body>
+</html>

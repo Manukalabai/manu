@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 10917654dca3
+Revision ID: 072f847d2bf0
 Revises: 
-Create Date: 2022-05-09 17:54:14.167799
+Create Date: 2022-05-18 10:28:32.368447
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '10917654dca3'
+revision = '072f847d2bf0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,6 +29,15 @@ def upgrade():
     sa.Column('brand', sa.String(), nullable=False),
     sa.Column('price', sa.Integer(), nullable=True),
     sa.Column('engine', sa.String(), nullable=False),
+    sa.Column('purpose', sa.String(), nullable=True),
+    sa.Column('fuel', sa.String(), nullable=False),
+    sa.Column('drive_type', sa.String(), nullable=False),
+    sa.Column('mileage', sa.String(), nullable=False),
+    sa.Column('engine_size', sa.String(), nullable=False),
+    sa.Column('steering', sa.String(), nullable=False),
+    sa.Column('min_engcc', sa.String(), nullable=False),
+    sa.Column('max_engcc', sa.String(), nullable=False),
+    sa.Column('colour', sa.String(), nullable=False),
     sa.Column('image', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('number_plate'),
     sa.UniqueConstraint('logbook_number')

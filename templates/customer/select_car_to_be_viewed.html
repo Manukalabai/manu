@@ -1,0 +1,29 @@
+<html>
+{% include 'partials/nav1.html' %}
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <form action="{{url_for('selectcartobeviewed')}}" method="POST">
+
+        <div class="col">
+            <a href="{{url_for('viewcarstobehired', filter='To be hired')}}" class="btn btn-primary btn-block">
+                <i></i>Cars to be hired
+            </a>
+        </div>
+
+        <div class="col">
+            <a href="{{url_for('viewcarstobesold',filter='To be sold')}}" class="btn btn-primary btn-block">
+                <i></i>Cars to be sold
+            </a>
+        </div>
+
+
+    </form>
+</body>
+
+</html>
