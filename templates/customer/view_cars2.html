@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-{% include 'partials/nav1.html' %}
-<script src="/public/bootstrap/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+{% include 'partials/nav1.html' %} {% include 'partials/headers.html' %}
 
 <head>
     <meta charset="UTF-8">
@@ -11,67 +9,87 @@
     <title>view cars</title>
 </head>
 
+<div class="text-center">
+    {% with messages= get_flashed_messages (with_categories=true) %} {% for category,message in messages %}
+    <div class="{{category}}">
+        {{message}}
+    </div>
+    {% endfor %} {% endwith %}
+
+</div>
+
 <body>
 
-    <div class="row">
 
-        <div class=" card col-md-3 text-center">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
             <div class="card-header">
-                <div class="card-title">
-                    <h5 class="text-center" id="" value="">{{car.number_plate}}</h5>
+                <h5 class="text-center" id="" value="">{{car.number_plate}}</h5>
 
-                </div>
+            </div>
+            <div class="card-block content-justify-center">
+                <div class="row">
+                    <section class="col-md-7">
 
-                <div class="">
-                    <span class="text-muted"> <img  style="height: 900px;" src="public/carimages/{{car.image}}" alt=""></span>
-                </div>
-                <div>
-                    <span class="text-muted"> origin:{{car.origin}}</span>
-                </div>
-                <div>
-                    <span class="text-muted">Model:{{car.model}}</span>
-                </div>
-                <div>
-                    <span class="text-muted">Gear:{{car.gear}}</span>
-                </div>
+                        <span class="text-muted"> <img  style="height: 300px;" src="public/carimages/{{car.image}}" alt=""></span>
 
-                <div>
-                    <span class="text-muted">Engine:{{car.engine}}</span>
-                </div>
-                <div>
-                    <span class="text-muted">Capacity:{{car.capacity}}</span>
-                </div>
-                <div>
-                    <span class="text-muted">Steering:{{car.steering}}</span>
-                </div>
-                <div>
-                    <span class="text-muted">Fuel:{{car.fuel}}</span>
-                </div>
-                <div>
-                    <span class="text-muted">colour:{{car.colour}}</span>
-                </div>
-                <div>
-                    <span class="text-muted">Price in $:{{car.price}}</span>
-                </div>
-                <div class="col">
-                    <a href="#" class="btn btn-primary btn-block">
-                        <i></i>Add to Cart
-                    </a>
-                </div>
+                    </section>
 
-                <div class="col">
-                    <a href="#" class="btn btn-primary btn-block">
-                        <i></i>Hire
-                    </a>
+                    <section class="col-md-5">
+                        <div>
+                            <span class="text-muted"> origin:{{car.origin}}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">Model:{{car.model}}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">Gear:{{car.gear}}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-muted">Engine:{{car.engine}}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">Capacity:{{car.capacity}}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">Steering:{{car.steering}}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">Fuel:{{car.fuel}}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">colour:{{car.colour}}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">Brand:{{car.brand}}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">Mileage:{{car.mileage}}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted">Price in $:{{car.price}} per day</span>
+                        </div>
+                        <div class="col">
+                            {% if car.purpose == 'To be hired' %}
+                            <a href="{{url_for('hiredcardetails' ,number_plate=car.number_plate)}}" class="btn btn-primary btn-block">
+                                <i></i>Hire
+                            </a>
+                            {%else%}
+                            <a href="{{url_for('cart', number_plate=car.number_plate)}}" class="btn btn-primary btn-block">
+                                <i></i>Add to cart
+                            </a>
+                            {% endif %}
+                        </div>
+                    </section>
                 </div>
             </div>
+
 
         </div>
     </div>
 
 
-
-    </div>
 
 </body>
 

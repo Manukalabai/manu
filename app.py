@@ -2,6 +2,8 @@ from crypt import methods
 from datetime import timedelta
 import email
 import json
+import numbers
+from urllib import response
 from sqlalchemy import or_,and_
 import re
 from flask import after_this_request, jsonify, render_template,request, request_started,url_for,redirect,session
@@ -131,7 +133,7 @@ def manager():
     if request.method=="POST":
         manager=manager_registration.query.all()
         if(manager_registration.query.filter(manager_registration.username == request.form['username'])).first():
-            flash('The user with the username already exists')
+            flash('The user with the username already exists','error')
             return redirect(url_for('manager'))
         onetime=10
         res = ''.join(secrets.choice(string.ascii_letters + string.digits) for x in range(onetime)) 
@@ -142,7 +144,7 @@ def manager():
         recipients=[request.form["email"]])       
         mail.send(msg)
 
-        newmanager=manager_registration(username=request.form['username'],password=res,email=request.form['email'],id_number=request.form['id_number'],phone_number=request.form['phone_number'],first_name=request.form['first_name'],last_name=request.form['last_name'],gender=request.form['gender'],role=request.form['role'])
+        newmanager=manager_registration(username=request.form['username'],password=res,email=request.form['email'],id_number=request.form['id_number'],phone_number=request.form['phone_number'],first_name=request.form['first_name'],last_name=request.form['last_name'],staff_id=request.form['satff_id'],gender=request.form['gender'],role=request.form['role'])
         newmanager.save()
         flash('please check in your email to get your password,use the password to login','success')
 
@@ -153,14 +155,16 @@ def manager():
 def customer_login():
     if 'user' in session:
         user=customer_registration.query.filter(customer_registration.username==session['user']).first()
-        return render_template("customer/customer_dashboard.html",user=user)
+        cartitems = cart_table.query.filter(cart_table.username==session['user']).count()
+        return render_template("customer/customer_dashboard.html",user=user,cartitems=cartitems)
     elif request.method=="POST":
 
         user=customer_registration.query.filter(customer_registration.username==request.form['username']).first()
         if user:
             if sha256_crypt.verify(request.form['password'],user.password):
                 session['user']=request.form['username']
-                return render_template("customer/customer_dashboard.html",user=user)                
+                cartitems = cart_table.query.filter(cart_table.username==session['user']).count()
+                return render_template("customer/customer_dashboard.html",user=user,cartitems=cartitems)                
     return render_template("customer/customer_login.html")
 
 
@@ -194,7 +198,11 @@ def superadmin_login():
 
 @app.route("/manager_login",methods=["POST","GET"])
 def manager_login():
-    if request.method=="POST":
+    if 'manager' in session:
+        manager=manager_registration.query.filter(manager_registration.username==session['admin']).first()
+        return render_template("manager/manager_dashboard.html",manager=manager)
+
+    elif request.method=="POST":
         manager=manager_registration.query.filter(manager_registration.username==request.form['username']).first()
         if manager:
             if sha256_crypt.verify(request.form['password'],manager.password):
@@ -278,22 +286,32 @@ def selectcartobeviewed():
 @app.route("/viewcars", methods=["POST", "GET"])
 def viewcars():
     car = add_car.query.all()
-    return render_template("customer/view_cars.html", car=car)
+    cartitems=[]
+    if 'user' in session:
+        cartitems = cart_table.query.filter(cart_table.username==session['user']).count()
+    return render_template("customer/view_cars.html", car=car,cartitems=cartitems)
 
 @app.route("/viewcars2", methods=["POST", "GET"])
 def viewcars2():
         car = add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
-        return render_template("customer/view_cars2.html", car=car)
+        cartitems=[]
+        if 'user' in session:
+            cartitems = cart_table.query.filter(cart_table.username==session['user']).count()
+        return render_template("customer/view_cars2.html", car=car,cartitems=cartitems)
 
-@app.route("/viewcars3", methods=["POST", "GET"])
-def viewcars3():
-        car = add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
-        return render_template("customer/view_cars3.html", car=car)
+# @app.route("/viewcars3", methods=["POST", "GET"])
+# def viewcars3():
+#         car = add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
+#         return render_template("customer/view_cars3.html", car=car)
 
 @app.route("/viewcartobesold", methods=["POST", "GET"])
 def viewcarstobesold():
     car=add_car.query.filter(add_car.purpose==request.args.get('filter')).all()
-    return render_template("customer/view_cars.html", car=car)
+    cartitems=[]
+    if 'user' in session:
+     cartitems = cart_table.query.filter(cart_table.username==session['user']).count()
+    
+    return render_template("customer/view_cars.html", car=car, cartitems=cartitems)
 
 @app.route("/viewcartobehired", methods=["POST", "GET"])
 def viewcarstobehired():
@@ -413,18 +431,101 @@ def addcar():
 
 @app.route("/hiredcardetails", methods=["POST","GET"])
 def hiredcardetails():
-    if request.method=="POST":
-        car=add_car.query.filter(add_car.number_plate==request.form['number_plate']).first()
+    if 'user' in session:
+        if request.method=="POST":
+            car=add_car.query.filter(add_car.number_plate==request.form['number_plate']).first()
 
-        custome=customer_registration.query.filter(customer_registration.username==session['user']).first()
-        if hired_car_details.query.filter(and_(hired_car_details.username==customer.username,hired_car_details.number_plate==customer.username)).first():
+            user=customer_registration.query.filter(customer_registration.username==session['user']).first()
+            if hired_car_details.query.filter(and_(hired_car_details.username==user.username,hired_car_details.number_plate==user.username)).first():
 
-            flash("you have already hired this car")
-            return redirect(url_for('viewcars'))
-        new_hire=hired_car_details(number_plate=car.number_plate,hiring_date=request.form['hiring_date'],returning_date=request.form['returning_date'],hiring_id= uuid.uuid4(),period=('returning_date')-('hiring_date'),amount=('period')*add_car.price)
-        new_hire.save()
-        flash('your hiring process has been successfully submitted kindly wait for an approval message from the manager ')
-    return redirect(url_for('hiredcardetails'))
+                flash("you have already hired this car")
+                return redirect(url_for('viewcarstobehired'))
+            new_hire=hired_car_details(number_plate=car.number_plate,hiring_date=request.form['hiring_date'],returning_date=request.form['returning_date'],hiring_id= uuid.uuid4(),period=request.form['period'],amount=request.form['amount'],username=user.username)
+            new_hire.save()
+            flash('your hiring process has been successfully submitted kindly wait for an approval message from the manager','success')
+            return render_template("customer/hiredcardetails.html" ,car=car)
+        car=add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
+        return render_template("customer/hiredcardetails.html",car=car)
+    return redirect(url_for('customer_login'))
+
+@app.route("/mpesa", methods=["GET","POST"])
+def mpesa():
+
+
+
+    
+    data = {
+        "business_shortcode": 174379,
+        "passcode": "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
+        "amount":1,
+        "phone_number": "+254758427893",
+        "reference_code":"payment for car ",       
+        "callback_url": "https://5b20-154-156-47-14.in.ngrok.io/callback-url",
+        "description": "Payment for a car" 
+    }
+    mpesa_api.MpesaExpress.stk_push(**data)
+    return render_template("mpesa_payment.html")
+
+@app.route('/callback-url',methods=["POST"])
+def callback_url():
+    json_data = request.get_json()
+    print(json.data)
+    # result_code=json_data["Body"]["stkCallback"]["ResultCode"]
+    # transaction_code=
+    # amount=
+    # phone_number=
+    # name=
+
+
+    message={
+        "ResultCode":0,
+        "ResultDesc":"success",
+        "ThirdPartyTransID":"h234k2h4krhk2"
+    }
+    #if result code is 0 you can proceed and save the data else if its any other number you can track the transaction
+    return jsonify(message)
+
+@app.route("/cart", methods=["POST","GET"])
+def cart():
+    if 'user' in session:
+
+        if request.method=="GET":
+            car=add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
+            print(request.args.get('number_plate'))
+
+            user=customer_registration.query.filter(customer_registration.username==session['user']).first()
+            if cart_table.query.filter(and_(cart_table.username==user.username,cart_table.number_plate==car.number_plate)).first():
+
+                flash("you have already added this car to the cart",'success')
+                car=add_car.query.filter(add_car.purpose=='To be sold').all()
+                cartitems = cart_table.query.filter(cart_table.username==session['user']).count()
+                return render_template("customer/view_cars.html", car=car, cartitems=cartitems)
+            cart=cart_table(number_plate=car.number_plate,cart_id= uuid.uuid4(),username=user.username,price=car.price,image=car.image)
+            cart.save()
+            flash('car added to the cart','success')
+            return render_template("customer/view_cars2.html" ,car=car)
+        car=add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
+        return render_template("customer/view_cars2.html",car=car)
+    else:
+        return render_template("customer/customer_login.html")
+
+@app.route("/viewcart",methods=["POST","GET"])
+def viewcart():
+    if request.method=="GET":
+        user=customer_registration.query.filter(customer_registration.username==session['user']).first()
+        cart=cart_table.query.filter(cart_table.username==session['user']).all()
+        return render_template("customer/cart.html", car=cart)
+
+
+
+@app.route('/removefromcart',  methods=['GET', 'POST'])
+def removefromcart():
+    car =cart_table.query.filter(and_(cart_table.number_plate==request.args.get("number_plate")),cart_table.username==session['user']).first() 
+    db.session.delete(car)
+    db.session.commit()
+
+    return redirect(url_for('viewcart'))
+        
 
 
 @app.route("/about",methods=["GET","POST"])
@@ -436,7 +537,6 @@ def about():
 def help():
     if request.method=="GET":
         return render_template("customer/help.html")
-
 
 @app.route('/backhome')
 def backhome():

@@ -23,12 +23,16 @@
 
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item" style="float: right;">
                     <a class="nav-link" href="{{url_for('about')}}">about</a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" href="{{url_for('help')}}"><i class="fa fa-question-circle"></i> help</a>
+                    <a class="nav-link" href="{{url_for('viewcart')}}"><i class="fa fa-shopping-cart">{{cartitems}}</i>view cart</a>
                 </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('help')}}"><i class="fa fa-question-circle">help</i> help</a>
+                </li>  -->
 
             </ul>
         </div>

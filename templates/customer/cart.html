@@ -1,0 +1,58 @@
+<html>
+{% include 'partials/nav.html' %}
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title></title>
+</head>
+
+<body>
+
+
+    <table class="table ">
+        <thead>
+            <tr>
+
+                <th scope="col ">NUMBER PLATE</th>
+                <th scope="col ">USERNAME</th>
+                <th scope="col ">PRICE</th>
+                <th scope="col ">CAR IMAGE</th>
+
+            </tr>
+        </thead>
+        {% for i in car %}
+
+        <tr>
+
+            <td>{{i.number_plate}}
+            </td>
+
+
+            <td>{{i.username}}
+            </td>
+
+            <td>{{i.price}}
+            </td>
+
+            <td>
+                <span class="text-muted "> <img  style="height: 50px; width: 50px " src="public/carimages/{{i.image}} " alt=" "></span>
+            </td>
+
+
+            <td>
+                <form method="POST" action="{{url_for('removefromcart',number_plate=i.number_plate)}}"><input type="text" value="{{i.number_plate}}" name="number_plate" hidden><input type="submit" value="remove"></form>
+
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+
+    <input class="btn btn-lg btn-primary btn-block" value="submit" type="submit">
+
+
+
+</body>
+
+</html>

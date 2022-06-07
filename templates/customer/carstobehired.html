@@ -8,13 +8,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>view cars</title>
+    <title>view cows</title>
 </head>
 
 <body>
 
     <div class="row">
-
+        {% for car in car %}
         <div class=" card col-md-3 text-center">
             <div class="card-header">
                 <div class="card-title">
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="">
-                    <span class="text-muted"> <img  style="height: 900px;" src="public/carimages/{{car.image}}" alt=""></span>
+                    <span class="text-muted"> <img  style="height: 250px; width: 250px" src="public/carimages/{{car.image}}" alt=""></span>
                 </div>
                 <div>
                     <span class="text-muted"> origin:{{car.origin}}</span>
@@ -51,20 +51,22 @@
                     <span class="text-muted">colour:{{car.colour}}</span>
                 </div>
                 <div>
-                    <span class="text-muted">Price in $:{{car.price}} per day</span>
+                    <span class="text-muted">Brand:{{car.brand}}</span>
+                </div>
+                <div>
+                    <span class="text-muted">Price in $:{{car.price}}</span>
                 </div>
                 <div class="col">
-                    <a href="{{url_for('hiredcardetails')}}" class="btn btn-primary btn-block">
-                        <i></i>Hire
+                    <a href="{{url_for('viewcars3',number_plate=car.number_plate)}}" class="btn btn-primary btn-block">
+                        <i></i>view
                     </a>
                 </div>
+
             </div>
-
         </div>
-    </div>
 
 
-
+        {% endfor %}
     </div>
 
 </body>

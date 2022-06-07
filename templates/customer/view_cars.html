@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-{% include 'partials/nav1.html' %}
-<script src="/public/bootstrap/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+{% include 'partials/nav1.html' %} {% include 'partials/headers.html' %}
 
 <head>
     <meta charset="UTF-8">
@@ -10,6 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>view cows</title>
 </head>
+<div class="text-center">
+    {% with messages= get_flashed_messages (with_categories=true) %} {% for category,message in messages %}
+    <div class="{{category}}">
+        {{message}}
+    </div>
+    {% endfor %} {% endwith %}
+
+</div>
 
 <body>
 
@@ -45,16 +51,22 @@
                     <span class="text-muted">Steering:{{car.steering}}</span>
                 </div>
                 <div>
+                    <span class="text-muted">Mileage:{{car.mileage}}</span>
+                </div>
+                <div>
                     <span class="text-muted">Fuel:{{car.fuel}}</span>
                 </div>
                 <div>
                     <span class="text-muted">colour:{{car.colour}}</span>
                 </div>
                 <div>
+                    <span class="text-muted">Brand:{{car.brand}}</span>
+                </div>
+                <div>
                     <span class="text-muted">Price in $:{{car.price}}</span>
                 </div>
                 <div class="col">
-                    <a href="{{url_for('viewcars3',number_plate=car.number_plate)}}" class="btn btn-primary btn-block">
+                    <a href="{{url_for('viewcars2',number_plate=car.number_plate)}}" class="btn btn-primary btn-block">
                         <i></i>view
                     </a>
                 </div>

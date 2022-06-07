@@ -27,14 +27,14 @@
                     <a class="nav-link" href="{{url_for('about')}}">about</a>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item" style="float: right;">
                     <a class="nav-link" href="{{url_for('help')}}"><i class="fa fa-question-circle"></i> help</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fa fa-shopping-cart"></i> view cart</a>
+                    <a class="nav-link" href="{{url_for('viewcart')}}"><i class="fa fa-shopping-cart"></i> view cart</a>
                 </li>
 
-                <li class="nav-item navbar-nav me-auto mb-2 mb-lg-0 m-auto">
+                <li class="nav-item navbar-nav me-auto mb-2 mb-lg-0 m-auto" style="float: right;">
                     <a class="nav-link active" href="{{url_for('logout')}}"> <i class="fa fa-sign-out-alt"></i>logout</a>
 
                 </li>
