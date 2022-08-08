@@ -1,5 +1,7 @@
 <html>
-{% include 'partials/nav.html' %} {% include 'partials/headers.html' %}
+{% include 'partials/nav.html' %}
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
 
 <head>
     <title></title>
@@ -9,8 +11,9 @@
 
     <form action="searchcars" method="post">
         <input class="col-md-6 mt-2" type="text" placeholder="search by Number plate,Model,Price,Brand,Origin,Fuel,Gear,..." id="search" name="search">
-        <input type="submit" class="btn btn-primary" value="submit">
+        <input type="submit" class="bt btn-primary" value="submit">
     </form>
+
 
     <table class="table ">
         <thead>
@@ -26,7 +29,6 @@
                 <th scope="col ">Steering</th>
                 <th scope="col ">pupose</th>
                 <th scope="col ">Image</th>
-                <th></th>
 
             </tr>
         </thead>
@@ -57,9 +59,10 @@
             </td>
 
 
+
             {% if admin.role=='Add Car'%}
             <td>
-                <form action="{{url_for( 'deletecarbyadmin',number_plate=car.number_plate)}}" method="post"><input type="text" value="{{car.number_plate}}" name="number_plate" hidden><input type="submit" value="remove"></form>
+                <form method="POST" action="{{url_for( 'deletecarbyadmin',number_plate=car.number_plate)}} "><input type="text" value="{{car.number_plate}}" name="number_plate" hidden><input type="submit" value="remove"></form>
 
             </td>
             {% endif %}

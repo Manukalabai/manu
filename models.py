@@ -96,8 +96,8 @@ class manager_registration(db.Model):
         __tablename__='manager_registration'
         first_name=db.Column(db.String,nullable=False)
         last_name=db.Column(db.String,nullable=False)
-        username=db.Column(db.String,unique=True, nullable=False)
-        staff_id=db.Column(db.String,primary_key=True, nullable=False)
+        username=db.Column(db.String,unique=True, nullable=False,primary_key=True)
+        staff_id=db.Column(db.String,unique=True, nullable=False)
         id_number=db.Column(db.Integer,nullable=False,unique=True)
         phone_number=db.Column(db.Integer,nullable=False, unique=True)
         email=db.Column(db.String,nullable=False)
@@ -284,6 +284,67 @@ class cart_table(db.Model):
         def save(self):
                 db.session.add(self)
                 db.session.commit()
+
+class transactions(db.Model):
+        __tablename__='transactions'
+        number_plate=db.Column(db.String,nullable=False, unique=True)
+        username=db.Column(db.String,nullable=False,unique=True)
+        transaction_code=db.Column(db.String,unique=True,primary_key=True)
+        amnt=db.Column(db.String,nullable=False)
+        date=db.Column(db.String,nullable=False)
+        phone_number=db.Column(db.String,nullable=False,unique=True)
+                
+        def __init__(self,number_plate,username,transaction_code,amnt,date,phone_number):
+                self.number_plate=number_plate
+                self.username=username
+                self.transaction_code=transaction_code
+                self.amnt=amnt
+                self.date=date
+                self.phone_number=phone_number
+        def save(self):
+                db.session.add(self)
+                db.session.commit()
+
+class paymentsforcarssold(db.Model):
+        __tablename__='paymentsforcarssold'
+        number_plate=db.Column(db.ARRAY(db.String),nullable=False, unique=True)
+        username=db.Column(db.String,nullable=False,unique=True,primary_key=True)           
+        def __init__(self,number_plate,username):
+                self.number_plate=number_plate
+                self.username=username
+        def save(self):
+                db.session.add(self)
+                db.session.commit()
+
+class book_appointment(db.Model):
+        __tablename__='book_appointment'
+
+        appointment_id=db.Column(db.String,nullable=False, unique=True,primary_key=True)
+        number_plate=db.Column(db.String,nullable=False)
+        username=db.Column(db.String,db.ForeignKey('customer_registration.username'),nullable=False)
+        email=db.Column(db.String,nullable=False)
+        date=db.Column(db.String,nullable=False)
+        location=db.Column(db.String,nullable=False)
+        description=db.Column(db.String,nullable=False)
+        problem=db.Column(db.String)
+        charges=db.Column(db.Integer)
+        appointment_state=db.Column(db.Boolean)
+                
+        def __init__(self,appointment_id,number_plate,username,email,date,location,description,problem,charges,appointment_state):
+                self.appointment_id=appointment_id
+                self.number_plate=number_plate
+                self.username=username
+                self.email=email
+                self.date=date
+                self.location=location
+                self.description=description
+                self.problem=problem
+                self.charges=charges
+                self.appointment_state=appointment_state
+        def save(self):
+                db.session.add(self)
+                db.session.commit()
+
 
 # class buy_transaction(db.Model):
 #         __tablename__='buy_transaction'

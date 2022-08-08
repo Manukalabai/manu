@@ -18,13 +18,13 @@
                 <th scope="col ">USERNAME</th>
                 <th scope="col ">PRICE</th>
                 <th scope="col ">CAR IMAGE</th>
+                <th></th>
 
             </tr>
         </thead>
         {% for i in car %}
 
         <tr>
-
             <td>{{i.number_plate}}
             </td>
 
@@ -48,10 +48,11 @@
         </tr>
         {% endfor %}
     </table>
+    <form action="{{url_for('mpesas')}}" method="post">
+        <input class="btn btn-lg btn-primary btn-block" value="{{price}}" type="number" readonly>
 
-    <input class="btn btn-lg btn-primary btn-block" value="submit" type="submit">
-
-
+        <input class="btn btn-lg btn-primary btn-block" value="submit" type="submit">
+    </form>
 
 </body>
 

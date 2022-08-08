@@ -15,9 +15,15 @@
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
             <ul class="navbar-nav">
+                {% if 'user' not in session %}
                 <li class="nav-item">
                     <a class="nav-link active" href="{{url_for('home')}}"> <i class="fa fa-home"></i>home</a>
                 </li>
+                {% endif %} {% if 'user' in session %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('backhome')}}"><i class="fa fa-dashboard"></i>Back to dashboard</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link active" href="{{url_for('selectcartobeviewed')}}"> <i class="fa fa-eye"></i>view cars</a>
 
@@ -27,12 +33,14 @@
                     <a class="nav-link" href="{{url_for('about')}}">about</a>
                 </li>
 
+                {% if 'user' in session %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('viewcart')}}"><i class="fa fa-shopping-cart">{{cartitems}}</i>view cart</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="{{url_for('help')}}"><i class="fa fa-question-circle">help</i> help</a>
-                </li>  -->
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('help')}}"><i class="fa fa-question-circle"></i> help</a>
+                </li>
 
             </ul>
         </div>

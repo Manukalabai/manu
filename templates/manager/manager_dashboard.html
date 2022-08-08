@@ -1,29 +1,22 @@
 <!DOCTYPE html>
 <html>
-{% include 'partials/nav.html' %}
-<script src="/public/bootstrap/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+{% include 'partials/adm_nav.html' %}{% include 'partials/headers.html' %}
+
 
 <head>
     <tItle></tItle>
 </head>
+
+<div class="text-center">
+    {% with messages= get_flashed_messages (with_categories=true) %} {% for category,message in messages %}
+    <div class="{{category}}">
+        {{message}}
+    </div>
+    {% endfor %} {% endwith %}
+
+</div>
 <div class="container mt-5">
     <div class="row">
-
-
-        <div class="col">
-            <a href="#" class="btn btn-primary btn-block">
-                <i></i>view cars
-            </a>
-
-        </div>
-
-
-        <div class="col">
-            <a href="#" class="btn btn-primary btn-block">
-                <i></i>send mail
-            </a>
-        </div>
 
         <div class="col">
             <a href="#" class="btn btn-primary btn-block">
@@ -32,18 +25,132 @@
         </div>
 
         <div class="col">
-            <a href="#" class="btn btn-warning btn-block">
+            <a href="{{url_for('viewadmins')}}" class="btn btn-warning btn-block">
                 <i></i>view admin
             </a>
         </div>
 
         <div class="col">
-            <a href="#" class="btn btn-warning btn-block">
+            <a href="{{url_for('viewcustomers')}}" class="btn btn-warning btn-block">
                 <i></i>view customers
             </a>
         </div>
+        <div class="col-md-2">
+            <a href="#" class="btn btn-info btn-block" data-bs-target="#updatedetailsmodal" data-bs-toggle="modal">
+                <i></i>update details
+            </a>
+        </div>
+
+        <div class="modal fade" id="updatedetailsmodal">
+            <div class="modal-dialog bg-primary">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h1 class="modal-title" id="changepasswordmodall">update details</h1>
+                        <button class="close" data-bs-dismiss="modal">&times;</button>
+
+                    </div>
+                    <div class="modal-body">
+
+                        <form action="{{url_for('update_manager_details')}}" method="POST">
+                            <div class="form-group">
+                                <label class="form-control-label">First Name</label>
+                                <input type="text" value="{{manager.first_name}}" class="form-control" name="first_name" id="first_name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-control-label">Last Name</label>
+                                <input type="text" value="{{manager.last_name}}" class="form-control" name="last_name" id="last_name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-control-label">Username</label>
+                                <input type="text" value="{{manager.username}}" class="form-control" name="username" id="username" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-control-label">Email</label>
+                                <input type="email" value="{{manager.email}}" class="form-control" name="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Id Number</label>
+                                <input type="number" value="{{manager.id_number}}" class="form-control" name="id_number" id="id_number" required minlength="7" maxlength="8">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-control-label">Phone Number</label>
+                                <input type="number" value="{{manager.phone_number}}" class="form-control" name="phone_number" id="phone_number" required minlength="10" maxlength="10">
+                            </div>
+
+                            <button class="btn btn-primary " type="submit">submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <a href="#" class="btn btn-warning btn-block" data-bs-target="#changepasswordmodal" data-bs-toggle="modal">
+                <i></i>change password
+            </a>
+        </div>
+
+        <div class="modal fade" id="changepasswordmodal">
+            <div class="modal-dialog bg-primary">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h1 class="modal-title" id="changepasswordmodall">change password</h1>
+                        <button class="close" data-bs-dismiss="modal">&times;</button>
+
+                    </div>
+                    <div class="modal-body">
+
+                        <form action="{{url_for('changepasswordbymanager')}}" method="POST">
+                            <div class="form-group">
+                                <label class="form-control-label">old password</label>
+                                <input type="password" class="form-control" name="old_password" id="old password" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-control-label">New password</label>
+                                <input type="password" class="form-control" name="new_password" id="New password" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-control-label">confirm password</label>
+                                <input type="password" class="form-control" name="confirm_password" id="confirm password" required>
+                            </div>
+
+                            <button class="btn btn-primary " input type="submit" value="submit">submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
+    <div class="container mt-5">
+        <div class="row container">
+            <div class="col-md-6 offset-md-3">
+                <div class="row">
+                    <div class="col ">
+                        <a href="{{url_for('viewcarsbyadmin')}}" class="btn btn-primary btn-block">
+                            <i></i>view cars
+                        </a>
+
+
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-primary btn-block">
+                            <i></i>send mail
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+</div>
+
 
 </html>

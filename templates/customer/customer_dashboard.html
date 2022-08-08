@@ -19,6 +19,10 @@
 <div class="container mt-5">
     <div class="row">
 
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('viewappointments')}}"><i class="fa fa-bell"></i>{{bkappointment}} Response from admin</a>
+        </li>
+
 
         <div class="col">
             <a href="{{url_for('selectcartobeviewed')}}" class="btn btn-primary btn-block">
@@ -29,7 +33,7 @@
 
 
         <div class="col">
-            <a href="#" class="btn btn-primary btn-block">
+            <a href="{{url_for('bookappointment')}}" class="btn btn-primary btn-block">
                 <i></i>book appointment
             </a>
         </div>

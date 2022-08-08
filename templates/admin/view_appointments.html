@@ -1,0 +1,124 @@
+<html>
+{% include 'partials/nav.html' %}
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title>welcome</title>
+</head>
+
+<body>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th scope="col">Number Plate</th>
+                <th scope="col">Location</th>
+                <th scope="col">date</th>
+                <th scope="col">description</th>
+                {% if 'user' in session %}
+                <th scope="col">problem</th>
+                <th scope="col">charges</th>
+                {% else %}
+
+                <th scope="col">email</th>
+                <th scope="col">Username</th>
+                {%endif%}
+
+
+
+            </tr>
+        </thead>
+        {% for bkappointment in appointments %}
+
+        <tr>
+
+            <td>{{bkappointment.number_plate}}
+            </td>
+
+            <td>{{bkappointment.location}}
+            </td>
+            <td>{{bkappointment.date}}
+            </td>
+            <td>{{bkappointment.description}}
+            </td>
+
+            {% if 'admin' in session %}
+            <td>{{bkappointment.username}}
+            </td>
+            <td>{{bkappointment.email}}
+            </td>
+
+            {% else %}
+            <td>{{bkappointment.problem}}
+            </td>
+            <td>{{bkappointment.charges}}
+            </td>
+            {%endif%} {% if 'admin' in session %}
+            <td>
+                <a href="#" id="{{bkappointment.appointment_id}}" onclick="serveappointments(this.id)" data-bs-target="#exampleModal" data-bs-toggle="modal">Serve</a>
+            </td>
+            {% endif %} {% if 'user' in session %}
+
+            <td>
+                <form method="POST" action="{{url_for('declineforcarrepair')}}">
+                    <input name="appointment_id" value="{{bkappointment.appointment_id}}" type="text" hidden>
+                    <input onclick="decline" type="submit" value="Decline"></form>
+
+            </td>
+            <td>
+                <a href="#" id="{{bkappointment.appointment_id}}" onclick="serveappointments(this.id)" data-bs-target="#exampleModal" data-bs-toggle="modal">Accept</a>
+            </td>
+
+            {% endif %}
+
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{url_for('chargesforappointments')}}" method="post">
+                        <label for="" class="form-control-label" hidden> appointment Id</label>
+                        <input type="text" class="form-control" name="appointment_id" id="appointment" hidden required>
+
+                        <label for="" class="form-control-label">Problem</label>
+                        <textarea name="problem" class="form-control" name="problem" id="problem" rows="5"></textarea>
+
+                        <label for="" class="form-control-label">Charges</label>
+                        <input type="text" class="form-control" name="charges" id="charges" required>
+
+                        <button type="submit" value="submit">submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+</body>
+
+</html>
+<script>
+    function serveappointments(appointment_id) {
+        manu = document.querySelector("#appointment");
+        manu.value = appointment_id;
+    }
+
+    function decline() {
+        if (!confirm('your appointment will be cancelled!')) {
+            return false;
+        }
+        return true;
+
+
+    }
+</script>

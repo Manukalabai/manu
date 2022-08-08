@@ -2,7 +2,6 @@ from crypt import methods
 from datetime import timedelta
 import email
 import json
-import numbers
 from urllib import response
 from sqlalchemy import or_,and_
 import re
@@ -26,6 +25,8 @@ from PIL import Image
 import os
 from werkzeug.utils import secure_filename 
 
+from reports import *
+
 con = psycopg2.connect(database="carmanagement", user="kalabai", password="kalabai", host="127.0.0.1", port="5432")
 cursor = con.cursor()
 
@@ -38,9 +39,10 @@ POSTGRES={
     'port':'5432',
     'db':'carmanagement'
 }
+app.config['SQLALCHEMY_DATABASE_URI']='postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' %POSTGRES
 db.init_app(app)
 migrate=Migrate(app,db)
-app.config['SQLALCHEMY_DATABASE_URI']='postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' %POSTGRES
+
 app.config.update(
     DEBBUG=True,
     MAIL_SERVER=("smtp.gmail.com"),
@@ -48,7 +50,7 @@ app.config.update(
     MAIL_USE_SSL=True,
     MAIL_USE_TLS=False,
     MAIL_USERNAME="manukalabai214@gmail.com",
-    MAIL_PASSWORD="Compscience1"
+    MAIL_PASSWORD="kxclhdefkqbrlcra"
 )
 mail=Mail(app)
 
@@ -80,6 +82,14 @@ def customer():
 
         return render_template("customer/customer_register.html")
     return render_template("customer/customer_register.html")
+
+def send_mail(subject, recipients,body):
+    msg=Message(subject,
+    sender="manukalabai214@gmail.com",
+    body=body ,
+    recipients=recipients)      
+    mail.send(msg)
+
 
 @app.route("/admin_registration",methods=["POST","GET"])
 def admin():
@@ -144,7 +154,7 @@ def manager():
         recipients=[request.form["email"]])       
         mail.send(msg)
 
-        newmanager=manager_registration(username=request.form['username'],password=res,email=request.form['email'],id_number=request.form['id_number'],phone_number=request.form['phone_number'],first_name=request.form['first_name'],last_name=request.form['last_name'],staff_id=request.form['satff_id'],gender=request.form['gender'],role=request.form['role'])
+        newmanager=manager_registration(username=request.form['username'],password=res,email=request.form['email'],id_number=request.form['id_number'],phone_number=request.form['phone_number'],first_name=request.form['first_name'],last_name=request.form['last_name'],staff_id=request.form['staff_id'],gender=request.form['gender'],role=request.form['role'])
         newmanager.save()
         flash('please check in your email to get your password,use the password to login','success')
 
@@ -156,6 +166,7 @@ def customer_login():
     if 'user' in session:
         user=customer_registration.query.filter(customer_registration.username==session['user']).first()
         cartitems = cart_table.query.filter(cart_table.username==session['user']).count()
+        # bkappointment=book_appointment(appointment_id=uuid.uuid4(),number_plate=request.form['number_plate'],username=session['user'],email=request.form['email'],date=request.form['date'],location=request.form['location'],description=request.form['description']).count()
         return render_template("customer/customer_dashboard.html",user=user,cartitems=cartitems)
     elif request.method=="POST":
 
@@ -171,24 +182,27 @@ def customer_login():
 
 @app.route("/admin_login",methods=["POST","GET"])
 def admin_login():
+    bkappointment=book_appointment.query.count()
+
     if 'admin' in session:
         admin=admin_registration.query.filter(admin_registration.username==session['admin']).first()
-        return render_template("admin/admin_dashboard.html",admin=admin)
+        return render_template("admin/admin_dashboard.html",admin=admin,bkappointment=bkappointment)
     elif request.method=="POST":
 
         admin=admin_registration.query.filter(admin_registration.username==request.form['username']).first()
         if admin:
             if sha256_crypt.verify(request.form['password'],admin.password):
                 session['admin']=request.form['username']
-                return render_template("admin/admin_dashboard.html",admin=admin)                
+                return render_template("admin/admin_dashboard.html",admin=admin,bkappointment=bkappointment)                
     return render_template("admin/admin_login.html")
 
 @app.route("/superadmin_login",methods=["POST","GET"])
 def superadmin_login():
     if "superadmin" in session:
+        superadmin=superadmin_registration.query.filter(superadmin_registration.username==session['superadmin']).first()
         return render_template("superadmin/superadmin_dashboard.html")
 
-    if request.method=="POST":
+    elif request.method=="POST":
         superadmin=superadmin_registration.query.filter(superadmin_registration.username==request.form['username']).first()
         if superadmin:
             if sha256_crypt.verify(request.form['password'],superadmin.password):
@@ -199,7 +213,7 @@ def superadmin_login():
 @app.route("/manager_login",methods=["POST","GET"])
 def manager_login():
     if 'manager' in session:
-        manager=manager_registration.query.filter(manager_registration.username==session['admin']).first()
+        manager=manager_registration.query.filter(manager_registration.username==session['manager']).first()
         return render_template("manager/manager_dashboard.html",manager=manager)
 
     elif request.method=="POST":
@@ -207,7 +221,7 @@ def manager_login():
         if manager:
             if sha256_crypt.verify(request.form['password'],manager.password):
                 session['manager']=request.form['username']
-                return render_template("manager/manager_dashboard.html")
+                return render_template("manager/manager_dashboard.html",manager=manager)
     return render_template("manager/manager_login.html")
 
 
@@ -266,6 +280,24 @@ def changepassworda():
                 flash("password changed successfully", 'success')
             return redirect(url_for('admin_login'))
 
+@app.route("/chanagepasswordbymanager",methods=["POST","GET"])
+def changepasswordbymanager():
+    if request.method=="POST":
+        if "manager" in session:
+            manager = manager_registration.query.filter(manager_registration.username==session['manager']).first()
+            if not request.form['old_password'] or not request.form['new_password'] or not request.form['confirm_password']:                
+                flash("fill in all the details", 'error')
+            elif not request.form['new_password'] == request.form['confirm_password']:
+                flash("the new password and confirmed passwords don't match", 'error')
+            elif not sha256_crypt.verify(request.form['old_password'],manager.password):
+                flash(" please enter the correct old password" ,'error')
+                # return redirect(url_for("changepassworda"))
+            else:
+                manager.password= sha256_crypt.encrypt(request.form['new_password'])
+                manager.save()
+                flash("password changed successfully", 'success')
+            return redirect(url_for('manager_login'))
+
 
 @app.route("/viewadmins", methods=["POST", "GET"])
 def viewadmins():
@@ -322,8 +354,9 @@ def viewcarstobehired():
 
 @app.route("/viewcarsbyadmin", methods=["POST","GET"])
 def viewcarsbyadmin():
+    admin=admin_registration.query.filter(admin_registration.username==session['admin'])
     car = add_car.query.all()
-    return render_template("admin/view_cars_by_admin.html", car=car)
+    return render_template("admin/view_cars_by_admin.html", car=car,admin=admin)
 
 @app.route("/update_customer_details",methods=["POST","GET"])
 def update():
@@ -338,8 +371,23 @@ def update():
             user.phone_number = request.form['phone_number']
             user.id_number = request.form['id_number']
             user.save()
-            flash("details updated successfully")
+            flash("details updated successfully","success")
     return redirect(url_for("customer_login"))
+
+@app.route("/update_manager_details",methods=["POST","GET"])
+def update_manager_details():
+    if request.method=="POST":
+        if "manager" in session:
+            manager = manager_registration.query.filter(manager_registration.username==session["manager"]).first()
+            manager.first_name = request.form['first_name']
+            manager.last_name = request.form['last_name']
+            manager.username = request.form['username']
+            manager.email = request.form['email']
+            manager.phone_number = request.form['phone_number']
+            manager.id_number = request.form['id_number']
+            manager.save()
+            flash("details updated successfully",'success')
+            return redirect(url_for("manager_login"))
 
 
 @app.route("/update_admin_details",methods=["POST","GET"])
@@ -446,44 +494,51 @@ def hiredcardetails():
             return render_template("customer/hiredcardetails.html" ,car=car)
         car=add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
         return render_template("customer/hiredcardetails.html",car=car)
+    flash('Please login first if you have an account or create one then login','error')
     return redirect(url_for('customer_login'))
-
-@app.route("/mpesa", methods=["GET","POST"])
-def mpesa():
-
-
-
     
-    data = {
-        "business_shortcode": 174379,
-        "passcode": "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
-        "amount":1,
-        "phone_number": "+254758427893",
-        "reference_code":"payment for car ",       
-        "callback_url": "https://5b20-154-156-47-14.in.ngrok.io/callback-url",
-        "description": "Payment for a car" 
-    }
-    mpesa_api.MpesaExpress.stk_push(**data)
-    return render_template("mpesa_payment.html")
 
-@app.route('/callback-url',methods=["POST"])
+@app.route("/mpesas", methods=["GET","POST"])
+def mpesas():
+    if request.method=="POST":
+        number_plate=[]
+        cart=cart_table.query.filter(cart_table.username==session['user']).all()
+        price =0
+        # for i in cart:
+        #     number_plate.append(i.number_plate)
+        #     price+= int(i.price)
+        # record=paymentsforcarssold(username=session['user'],number_plate=number_plate)
+        # record.save()
+
+
+
+        
+        data = {
+            "business_shortcode": 174379,
+            "passcode": "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
+            "amount":1,
+            "phone_number": "+254742095405",
+            "reference_code":"payment for car ",       
+            "callback_url": "https://cab1-197-232-61-233.ap.ngrok.io/?username="+session['user'],
+            "description": "Payment for a car" 
+        }
+        mpesa_api.MpesaExpress.stk_push(**data)
+        return render_template("customer/mpesa_payment.html")
+
+@app.route('/callback_url',methods=["POST","GET"])
 def callback_url():
-    json_data = request.get_json()
-    print(json.data)
-    # result_code=json_data["Body"]["stkCallback"]["ResultCode"]
-    # transaction_code=
-    # amount=
-    # phone_number=
-    # name=
+    json_data = request.json
+    print(json_data)
+    print(json_data['Body']['stkCallback']['ResultDesc'])
+    if json_data['Body']['stkCallback']['ResultDesc'] == 'The service processed.' and json_data['Body']['stkCallback']['CallbackMetadata']:
+        transaction_code = json_data['Body']['stkCallback']['CallbackMetadata']['Item'][1]['Value']
+        amnt = json_data['Body']['stkCallback']['CallbackMetadata']['Item'][0]['value']
+        phone_number = json_data['Body']['stkCallback']['CallbackMetadata']['Item'][4]['value']
+        date = json_data['Body']['stkCallback']['CallbackMetadata']['Item'][3]['value']
+        trans=transactions(username=request.args.get('username'),number_plate='',transaction_code=transaction_code,date=date,amnt=amnt,phone_number=phone_number)
+        trans.save()
 
-
-    message={
-        "ResultCode":0,
-        "ResultDesc":"success",
-        "ThirdPartyTransID":"h234k2h4krhk2"
-    }
-    #if result code is 0 you can proceed and save the data else if its any other number you can track the transaction
-    return jsonify(message)
+        return 'successs'
 
 @app.route("/cart", methods=["POST","GET"])
 def cart():
@@ -507,6 +562,7 @@ def cart():
         car=add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
         return render_template("customer/view_cars2.html",car=car)
     else:
+        flash('Please login first if you have an account or create one then login','error')
         return render_template("customer/customer_login.html")
 
 @app.route("/viewcart",methods=["POST","GET"])
@@ -514,7 +570,11 @@ def viewcart():
     if request.method=="GET":
         user=customer_registration.query.filter(customer_registration.username==session['user']).first()
         cart=cart_table.query.filter(cart_table.username==session['user']).all()
-        return render_template("customer/cart.html", car=cart)
+        price = 0
+        for i in cart:
+            price+=int(i.price)
+
+        return render_template("customer/cart.html", car=cart,price=price)
 
 
 
@@ -523,8 +583,91 @@ def removefromcart():
     car =cart_table.query.filter(and_(cart_table.number_plate==request.args.get("number_plate")),cart_table.username==session['user']).first() 
     db.session.delete(car)
     db.session.commit()
-
     return redirect(url_for('viewcart'))
+
+@app.route('/bookappointment',methods=['GET','POST'])
+def bookappointment():
+    if request.method=="POST":
+        bkappointment=book_appointment.query.all()
+        user=customer_registration.query.filter(customer_registration.username==session['user']).first()     
+        bkappointment=book_appointment(appointment_id=uuid.uuid4(),number_plate=request.form['number_plate'],username=session['user'],email=request.form['email'],date=request.form['date'],location=request.form['location'],description=request.form['description'],problem=[],charges=None,appointment_state=False)
+        
+
+        adm=admin_registration.query.filter(admin_registration.role=="Repair Car").first()
+        subject = "An appointment"
+        body = request.form['description']
+        recipients = [adm.email]
+        send_mail(subject=subject,body=body,recipients=recipients)
+        bkappointment.save()
+        flash('your appointment has been submitted wait for feedback from the administrator via email','success')
+        return render_template("customer/book_appointments.html",user=user)
+
+
+    user=customer_registration.query.filter(customer_registration.username==session['user']).first()
+    return render_template("customer/book_appointments.html",user=user)
+
+@app.route("/viewappointments",methods=['POST','GET'])
+def viewappointments():
+    if request.method =="GET":
+        if 'admin' in session:
+            appointments=book_appointment.query.filter(book_appointment.appointment_state==False).all()
+            return render_template("admin/view_appointments.html",appointments=appointments)
+        elif 'user' in session:
+            user=customer_registration.query.filter(customer_registration.username==session['user']).first()
+            resp=book_appointment.query.filter(and_(book_appointment.email==user.email,book_appointment.charges!=None)).all()
+            return render_template("admin/view_appointments.html",appointments=resp,user=user)
+
+@app.route("/chargesforappointments",methods=['POST','GET'])
+def chargesforappointments():
+    if request.method=="POST":
+        if 'admin' in session:
+            charges=book_appointment.query.filter(book_appointment.appointment_id==request.form['appointment_id']).first()
+            charges.problem=request.form['problem']
+            charges.charges=int(request.form['charges'])
+
+            recipients=[charges.email]
+            body='The problem with your car whose number plate is:'+ charges.number_plate +'is ' +request.form['problem'] +' the charges are ksh. '+ request.form['charges']
+            subject="Response for your book appointment"
+            send_mail(recipients=recipients,body=body,subject=subject) 
+            if charges.appointment_state==False:
+                charges.appointment_state=True
+            charges.save()
+            return redirect(url_for('viewappointments')) 
+
+@app.route('/declineforcarrepair',  methods=['GET', 'POST'])
+def declineforcarrepair():
+    car =book_appointment.query.filter(book_appointment.appointment_id==request.form['appointment_id']).first() 
+    db.session.delete(car)
+    db.session.commit()
+    return redirect(url_for('viewappointments'))
+
+# @app.route('/approvecarrepair',  methods=['GET', 'POST'])
+# def declineforcarrepair():
+#     if request.method=="POST":
+#         repaircar=book_appointment.query.filter(book_appointment.appointment_id==request.form['appointment_id']).first()
+#         if repaircar.approval_state==False:
+#             repaircar.approval_state=True
+              
+
+
+@app.route('/deletecarbyadmin',  methods=['GET', 'POST'])
+def deletecarbyadmin():
+    if request.method=="POST":
+        car =add_car.query.filter(add_car.number_plate==request.form["number_plate"]).first() 
+        # if add_car.number_plate==car_hire.number_plate==number_plate==
+        db.session.delete(car)
+        db.session.commit()
+        return redirect(url_for('viewcarsbyadmin'),car=car)
+    
+
+@app.route('/searchcars',methods=["POST","GET"])
+def searchcars():
+    if request.method == "POST":
+        admin=admin_registration.query.filter(admin_registration.username==session['admin']).first()
+        print(admin.role)
+        car=add_car.query.filter(or_(add_car.number_plate==request.form['search'],add_car.brand==request.form['search'],add_car.origin==request.form['search'],add_car.fuel==request.form['search'],add_car.model==request.form['search'],add_car.gear==request.form['search'],add_car.engine==request.form['search'],add_car.steering==request.form['search'],add_car.purpose==request.form['search'])).all()
+        return render_template('admin/view_cars_by_admin2.html', car=car, admin=admin)
+    
         
 
 

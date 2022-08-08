@@ -134,13 +134,17 @@
 
         {% elif admin.role =='Repair Car' %}
 
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('viewappointments')}}"><i class="fa fa-bell"></i>{{bkappointment}} Appointments</a>
+        </li>
+
+
         <div class="col">
             <a href="#" class="btn btn-primary btn-block">
                 <i></i>Repair car
             </a>
 
         </div>
-
 
         <div class="col">
             <a href="#" class="btn btn-primary btn-block">

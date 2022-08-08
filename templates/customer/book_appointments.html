@@ -1,0 +1,72 @@
+<html>
+{% include 'partials/headers.html' %}{% include 'partials/dashboard.html' %}
+
+<head>
+    <title>Book appointment</title>
+</head>
+<div class="text-center">
+    {% with messages= get_flashed_messages (with_categories=true) %} {% for category,message in messages %}
+    <div class="{{category}}">
+        {{message}}
+    </div>
+    {% endfor %} {% endwith %}
+
+</div>
+
+<body>
+
+
+    <form action="{{url_for('bookappointment')}}" method="POST">
+        <div class="container-fluid bg-light py-3">
+            <div class="row">
+                <div class="col-md-5 mx-auto">
+                    <div class="card card-body" style="background-color: bisque;">
+                        <h3 class="text-center mb-4">Book Appointment</h3>
+                        <!-- <div class="alert alert-danger">                            <div class="form-group has-success">
+                                <label class="form-control-label">Location</label>
+                                <input class="form-control input-lg" placeholder="Location" name="location" value="" type="text" required>
+                            </div>
+                                            <a class="close font-weight-light" data-dismiss="alert" href="#">×</a>Password is too short.
+                                        </div> -->
+                        <fieldset>
+                            <div class="form-group has-error">
+                                <label class="form-control-label">Number Plate</label>
+                                <input class="form-control input-lg" placeholder="Number Plate" name="number_plate" type="text" required>
+                            </div>
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Username</label>
+                                <input class="form-control input-lg" placeholder="Username" name="username" value="{{user.username}}" type="text" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Email</label>
+                                <input class="form-control input-lg" placeholder="Email" name="email" value="{{user.email}}" type="email" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Date</label>
+                                <input class="form-control input-lg" placeholder="Date" name="date" value="" type="date" required>
+                            </div>
+
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Location</label>
+                                <input class="form-control input-lg" placeholder="Location" name="location" value="" type="text" required>
+                            </div>
+                            <div class="form-group has-success">
+                                <label class="form-control-label">Description</label>
+                                <textarea name="description" class="form-control" id="" rows="5"></textarea>
+
+                            </div>
+
+
+
+                            <input class="btn btn-lg btn-primary btn-block" value="save" type="submit">
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>
