@@ -38,6 +38,10 @@
                     <a class="nav-link active" href="{{url_for('logout')}}"> <i class="fa fa-sign-out-alt"></i>logout</a>
 
                 </li>
+                if 'user' in session
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('viewappointments')}}"><i class="fa fa-bell"></i>{{bkappointment}} Response from admin</a>
+                </li>
 
             </ul>
         </div>

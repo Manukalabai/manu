@@ -1,0 +1,43 @@
+<html>
+{% include 'partials/nav.html' %} {% include 'partials/headers.html' %}
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <div class="text-center">
+        {% with messages= get_flashed_messages (with_categories=true) %} {% for category,message in messages %}
+        <div class="{{category}}">
+            {{message}}
+        </div>
+        {% endfor %} {% endwith %}
+
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{url_for('selectreport')}}" method="post">
+                        <label for="" class="form-control-label" hidden> appointment Id</label>
+                        <input type="text" class="form-control" name="appointment_id" id="appointment" hidden required>
+
+                        <label for="" class="form-control-label">Problem</label>
+                        <textarea name="problem" class="form-control" name="problem" id="problem" rows="5"></textarea>
+
+                        <label for="" class="form-control-label">Charges</label>
+                        <input type="text" class="form-control" name="charges" id="charges" required>
+
+                        <button type="submit" value="submit">submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<html>
+{% include 'partials/nav1.html' %}
+<script src="/public/bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <form action="{{url_for('selectcartobeviewed')}}" method="POST">
+
+        <div class="col">
+            <a href="{{url_for('hiredcarsreport')}}" class="btn btn-primary btn-block">
+                <i></i>Hired cars report
+            </a>
+        </div>
+
+        <div class="col">
+            <a href="{{url_for('soldcarsreport')}}" class="btn btn-primary btn-block">
+                <i></i>sold cars report
+            </a>
+        </div>
+
+        <div class="col">
+            <a href="{{url_for('selectreport')}}" class="btn btn-primary btn-block">
+                <i></i>select report
+            </a>
+        </div>
+
+
+
+    </form>
+</body>
+
+</html>

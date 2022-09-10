@@ -7,6 +7,9 @@ from fpdf import FPDF
 from flask import request,flash,render_template,session
 from flask.wrappers import Response
 from sqlalchemy import and_
+@app.route("/selectreporttobegenrated")
+def selectreporttobegenerated():
+        return render_template("superadmin/select_report_")
 @app.route("/soldcarsreport")
 def soldcarsreport():
         pdf=FPDF(orientation='l')
@@ -81,7 +84,9 @@ def hiredcarsreport():
         pdf.ln(10)
         pdf.set_font('Times','',10)
         pdf.cell(page_width,0.0,'end of report',align='C')
+        # return render_template("superadmin/sold_cars_report.html")
         return Response(pdf.output(dest='S').encode('latin-1'),mimetype='application/pdf',headers={'Content-Disposition':'attachment;filename=report.pdf'})
+        
 
 # @app.route("/hiredcarsreport")
 # def hiredcarsreport():

@@ -3,6 +3,7 @@ from datetime import timedelta
 import email
 import json
 from urllib import response
+
 from sqlalchemy import or_,and_
 import re
 from flask import after_this_request, jsonify, render_template,request, request_started,url_for,redirect,session
@@ -336,6 +337,12 @@ def viewcars2():
 #         car = add_car.query.filter(add_car.number_plate==request.args.get('number_plate')).first()
 #         return render_template("customer/view_cars3.html", car=car)
 
+
+@app.route("/selectreport",methods=["GET","POST"])
+def selectreport():
+    if request.method=="POST":
+        return redirect(url_for("selectreport"))
+
 @app.route("/viewcartobesold", methods=["POST", "GET"])
 def viewcarstobesold():
     car=add_car.query.filter(add_car.purpose==request.args.get('filter')).all()
@@ -354,7 +361,7 @@ def viewcarstobehired():
 
 @app.route("/viewcarsbyadmin", methods=["POST","GET"])
 def viewcarsbyadmin():
-    admin=admin_registration.query.filter(admin_registration.username==session['admin'])
+    admin=admin_registration.query.filter(admin_registration.username==session['admin']) 
     car = add_car.query.all()
     return render_template("admin/view_cars_by_admin.html", car=car,admin=admin)
 
@@ -517,7 +524,7 @@ def mpesas():
             "business_shortcode": 174379,
             "passcode": "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
             "amount":1,
-            "phone_number": "+254742095405",
+            "phone_number": "+254758427893",
             "reference_code":"payment for car ",       
             "callback_url": "https://cab1-197-232-61-233.ap.ngrok.io/?username="+session['user'],
             "description": "Payment for a car" 
@@ -668,6 +675,12 @@ def searchcars():
         car=add_car.query.filter(or_(add_car.number_plate==request.form['search'],add_car.brand==request.form['search'],add_car.origin==request.form['search'],add_car.fuel==request.form['search'],add_car.model==request.form['search'],add_car.gear==request.form['search'],add_car.engine==request.form['search'],add_car.steering==request.form['search'],add_car.purpose==request.form['search'])).all()
         return render_template('admin/view_cars_by_admin2.html', car=car, admin=admin)
     
+
+@app.route('/searchcustomers',methods=["POST","GET"])
+def searchcustomers():
+    if request.method == "POST":
+        cust=customer_registration.query.filter(or_(customer_registration.username==request.form['search'],customer_registration.first_name==request.form['search'],customer_registration.last_name==request.form['search'],customer_registration.email==request.form['search'],customer_registration.gender==request.form['search']))
+        return render_template('superadmin/search_customers.html',user=cust)
         
 
 
@@ -689,7 +702,7 @@ def backhome():
         return redirect(url_for("admin_login"))
     elif 'superadmin' in session:
         return redirect(url_for("superadmin_login"))
-    elif 'maneger' in session:
+    elif 'manager' in session:
         return redirect(url_for("manager_login"))
     
 

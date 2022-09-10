@@ -1,9 +1,16 @@
 <html>
-<script src="/public/bootstrap/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css" />
+{% include 'partials/loginnav.html' %} {% include 'partials/headers.html' %}
 
 <head>
     <title></title>
+    <div class="text-center">
+        {% with messages= get_flashed_messages (with_categories=true) %} {% for category,message in messages %}
+        <div class="{{category}}">
+            {{message}}
+        </div>
+        {% endfor %} {% endwith %}
+
+    </div>
 </head>
 
 <body>
@@ -44,5 +51,6 @@
         </div>
     </form>
 </body>
+{% include 'footer.html' %}
 
 </html>
